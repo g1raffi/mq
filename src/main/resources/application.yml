@@ -1,0 +1,6 @@
+application:
+  jms:
+    broker-url: tcp://localhost:61616
+    username: artemis
+    password: abcd
+    queue: queue

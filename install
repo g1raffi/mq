@@ -1,0 +1,1 @@
+curl https://start.spring.io/starter.tgz -d dependencies=web,data-jpa,actuator,h2,artemis,lombok -d type=maven-project -d javaVersion=11 -d groupId=ch.puzzle -d artifactId=mq -d baseDir=mq | tar -xzvf -
