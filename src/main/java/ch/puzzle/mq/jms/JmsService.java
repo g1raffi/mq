@@ -27,6 +27,10 @@ public class JmsService {
         firstMessage = null;
     }
 
+    public void resetCounter() {
+        firstMessage = null;
+    }
+
     @JmsListener(destination = "${application.jms.inboundQueue}", containerFactory = "jmsListenerContainerFactory")
     public void listener(String message) throws JsonProcessingException {
         if (firstMessage == null) {
