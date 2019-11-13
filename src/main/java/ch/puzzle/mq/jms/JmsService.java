@@ -50,6 +50,7 @@ public class JmsService {
             firstMessage = Instant.now();
         }
         lastMessage = Instant.now();
+        numberOfMessagesProcessed++;
         Double value = objectMapper.readValue(message, Double.class);
         jmsTemplate.convertAndSend(applicationProperties.getJms().getOutboundQueue(), objectMapper.writeValueAsString(value * 10));
         log.info("JmsService: Transformed message at {}, first message was at {}", lastMessage, firstMessage);
