@@ -16,6 +16,7 @@ public class ApplicationProperties {
         private String brokerUrl;
         private String username;
         private String password;
-        private String queue;
+        private String inboundQueue;
+        private String outboundQueue;
     }
 }
