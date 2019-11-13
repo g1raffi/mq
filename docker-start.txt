@@ -1,0 +1,8 @@
+
+
+docker run --network=host -e APPLICATION_PORT=8080 -e APPLICATION_JMS_BROKER_URL=tcp://localhost:61616 -e APPLICATION_JMS_USERNAME=artemis -e APPLICATION_JMS_PASSWORD=abcd -e APPLICATION_JMS_INBOUND_QUEUE=null -e APPLICATION_JMS_OUTBOUND_QUEUE=inboundQueue -p 8080:8080 registry.ocp.puzzle.ch/pitc-fringebenefit-rhe/producer:latest
+docker run --network=host -e APPLICATION_PORT=8081 -e APPLICATION_JMS_BROKER_URL=tcp://localhost:61616 -e APPLICATION_JMS_USERNAME=artemis -e APPLICATION_JMS_PASSWORD=abcd -e APPLICATION_JMS_INBOUND_QUEUE=null -e APPLICATION_JMS_OUTBOUND_QUEUE=inboundQueue -p 8081:8081 registry.ocp.puzzle.ch/pitc-fringebenefit-rhe/producer:latest
+
+docker run --network=host -e APPLICATION_PORT=8082 -e APPLICATION_JMS_BROKER_URL=tcp://localhost:61616 -e APPLICATION_JMS_USERNAME=artemis -e APPLICATION_JMS_PASSWORD=abcd -e APPLICATION_JMS_INBOUND_QUEUE=inboundQueue -e APPLICATION_JMS_OUTBOUND_QUEUE=outboundQueue -p 8082:8082 registry.ocp.puzzle.ch/pitc-fringebenefit-rhe/transformer:latest
+docker run --network=host -e APPLICATION_PORT=8083 -e APPLICATION_JMS_BROKER_URL=tcp://localhost:61616 -e APPLICATION_JMS_USERNAME=artemis -e APPLICATION_JMS_PASSWORD=abcd -e APPLICATION_JMS_INBOUND_QUEUE=inboundQueue -e APPLICATION_JMS_OUTBOUND_QUEUE=outboundQueue -p 8083:8083 registry.ocp.puzzle.ch/pitc-fringebenefit-rhe/transformer:latest
+docker run --network=host -e APPLICATION_PORT=8084 -e APPLICATION_JMS_BROKER_URL=tcp://localhost:61616 -e APPLICATION_JMS_USERNAME=artemis -e APPLICATION_JMS_PASSWORD=abcd -e APPLICATION_JMS_INBOUND_QUEUE=inboundQueue -e APPLICATION_JMS_OUTBOUND_QUEUE=outboundQueue -p 8084:8084 registry.ocp.puzzle.ch/pitc-fringebenefit-rhe/transformer:latest

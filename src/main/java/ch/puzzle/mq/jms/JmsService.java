@@ -37,11 +37,13 @@ public class JmsService {
         firstMessage = null;
         lastMessage = null;
         numberOfMessagesProcessed = 0;
+        log.info("Reset counter.");
     }
 
     public String logStats() {
-        log.info("JmsService: Processed {} messages in {} seconds", numberOfMessagesProcessed, Duration.between(firstMessage, lastMessage).toSeconds());
-        return String.format("JmsService: Processed %s messages in %s seconds", numberOfMessagesProcessed, Duration.between(firstMessage, lastMessage).toSeconds());
+        String s = String.format("Processed %s messages in %s ms", numberOfMessagesProcessed, Duration.between(firstMessage, lastMessage).toMillis());
+        log.info(s);
+        return s;
     }
 
     @JmsListener(destination = "${application.jms.inboundQueue}", containerFactory = "jmsListenerContainerFactory")
@@ -53,6 +55,6 @@ public class JmsService {
         numberOfMessagesProcessed++;
         Double value = objectMapper.readValue(message, Double.class);
         jmsTemplate.convertAndSend(applicationProperties.getJms().getOutboundQueue(), objectMapper.writeValueAsString(value * 10));
-        log.info("JmsService: Transformed message at {}, first message was at {}", lastMessage, firstMessage);
+        log.info("Transformed message at {}, first message was at {}", lastMessage, firstMessage);
     }
 }
