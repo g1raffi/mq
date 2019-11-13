@@ -3,11 +3,13 @@ package ch.puzzle.mq.jms;
 import ch.puzzle.mq.config.ApplicationProperties;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.jms.annotation.JmsListener;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.stereotype.Service;
 
+import java.time.Duration;
 import java.time.Instant;
 
 @Slf4j
@@ -19,16 +21,27 @@ public class JmsService {
     private final ApplicationProperties applicationProperties;
 
     private static Instant firstMessage;
+    private static Instant lastMessage;
+    private static int numberOfMessagesProcessed;
 
     public JmsService(JmsTemplate jmsTemplate, ObjectMapper objectMapper, ApplicationProperties applicationProperties) {
         this.jmsTemplate = jmsTemplate;
         this.objectMapper = objectMapper;
         this.applicationProperties = applicationProperties;
         firstMessage = null;
+        lastMessage  = null;
+        numberOfMessagesProcessed = 0;
     }
 
     public void resetCounter() {
         firstMessage = null;
+        lastMessage = null;
+        numberOfMessagesProcessed = 0;
+    }
+
+    public String logStats() {
+        log.info("JmsService: Processed {} messages in {} seconds", numberOfMessagesProcessed, Duration.between(firstMessage, lastMessage).toSeconds());
+        return String.format("JmsService: Processed %s messages in %s seconds", numberOfMessagesProcessed, Duration.between(firstMessage, lastMessage).toSeconds());
     }
 
     @JmsListener(destination = "${application.jms.inboundQueue}", containerFactory = "jmsListenerContainerFactory")
@@ -36,8 +49,9 @@ public class JmsService {
         if (firstMessage == null) {
             firstMessage = Instant.now();
         }
+        lastMessage = Instant.now();
         Double value = objectMapper.readValue(message, Double.class);
         jmsTemplate.convertAndSend(applicationProperties.getJms().getOutboundQueue(), objectMapper.writeValueAsString(value * 10));
-        log.info("JmsService: Transformed message at {}, first message was at {}", Instant.now(), firstMessage);
+        log.info("JmsService: Transformed message at {}, first message was at {}", lastMessage, firstMessage);
     }
 }
