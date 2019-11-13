@@ -1,33 +1,24 @@
 package ch.puzzle.mq.jms;
 
-import ch.puzzle.mq.config.ApplicationProperties;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.jms.core.JmsTemplate;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @RestController
 @RequestMapping("/api/jms")
 public class JmsController {
 
-    private final JmsTemplate jmsTemplate;
-    private final ApplicationProperties applicationProperties;
+    private final JmsService jmsService;
 
-    public JmsController(JmsTemplate jmsTemplate, ApplicationProperties applicationProperties) {
-        this.jmsTemplate = jmsTemplate;
-        this.applicationProperties = applicationProperties;
+    public JmsController(JmsService jmsService) {
+        this.jmsService = jmsService;
     }
 
-    @PostMapping
-    public ResponseEntity sendMessage(@RequestBody String message) {
-        log.info("JMS: Sending message = {}", message);
-        jmsTemplate.convertAndSend(
-                applicationProperties.getJms().getQueue(), message
-        );
-        return ResponseEntity.ok(message);
+    @PostMapping("/{queue}/{numberOfMessages}")
+    public ResponseEntity sendMessage(@PathVariable String queue, @PathVariable Long numberOfMessages) {
+        log.info("JmsController: Start sending {} messages to {} queue.", numberOfMessages, queue);
+        jmsService.sendMessages(queue, numberOfMessages);
+        return ResponseEntity.ok().build();
     }
 }
